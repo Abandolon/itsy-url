@@ -1,5 +1,5 @@
 class UrlsController < ApplicationController
-  before_action :set_url, only: [:show, :edit, :update, :destroy]
+  before_action :set_url, only: [:edit, :update, :destroy]
 
   # GET /urls
   # GET /urls.json
@@ -10,6 +10,7 @@ class UrlsController < ApplicationController
   # GET /urls/1
   # GET /urls/1.json
   def show
+    @url.find_by(short_url: params[:short_url])
     @url.update(
       clicked: +1,
       last_clicked: Date.now

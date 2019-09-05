@@ -7,4 +7,5 @@ Rails.application.routes.draw do
     resource :url, only: [:index, :edit, :destroy]
   end
   get '/:id', to: 'url#find'
+  get '/:short_url', to: 'url#show'
 end
