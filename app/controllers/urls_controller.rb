@@ -1,15 +1,21 @@
 class UrlsController < ApplicationController
-  before_action :set_url, only: [:show, :edit, :update, :destroy]
+  before_action :set_url, only: [:edit, :update, :destroy]
 
   # GET /urls
   # GET /urls.json
   def index
-    @urls = Url.all
+    @urls = Url.where(user: current_user).all
   end
 
   # GET /urls/1
   # GET /urls/1.json
   def show
+    @url.find_by(short_url: params[:short_url])
+    @url.update(
+      clicked: +1,
+      last_clicked: Date.now
+    )
+    redirect_to @url.original(target: _blank)
   end
 
   # GET /urls/new
@@ -25,7 +31,7 @@ class UrlsController < ApplicationController
   # POST /urls.json
   def create
     @url = Url.new(url_params)
-
+    @url.clicked = 0
     respond_to do |format|
       if @url.save
         format.html { redirect_to @url, notice: 'Url was successfully created.' }
@@ -69,6 +75,6 @@ class UrlsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def url_params
-      params.fetch(:url, {})
+      params.require(:url).permit(:original, :custom_short, :user)
     end
 end
